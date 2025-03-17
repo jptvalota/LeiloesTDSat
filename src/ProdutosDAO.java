@@ -11,28 +11,34 @@
 import java.sql.PreparedStatement;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
-import java.sql.ResultSet;
+
 import java.util.ArrayList;
 
 
 public class ProdutosDAO {
     
-    Connection conn;
-    PreparedStatement prep;
-    ResultSet resultset;
-    ArrayList<ProdutosDTO> listagem = new ArrayList<>();
+     private conectaDAO conexao;
+                private Connection conn; 
+                 ArrayList<ProdutosDTO> listagem = new ArrayList<>();
+                 
+                public ProdutosDAO() {
+                this.conexao = new conectaDAO();
+                this.conn = this.conexao.connectDB();
+            }
+  
     
     public void cadastrarProduto (ProdutosDTO produto){
         
         
-         String sql = "INSERT INTO produtos(nome, valor) VALUES "
+         String sql = "INSERT INTO produtos(nome, valor, status) VALUES "
                     + "(?, ?, ?)";
                 try {
-                    PreparedStatement stmt = this.conn.prepareStatement(sql);
-                    stmt.setString(1, produto.getNome());
-                     stmt.setInt(2, produto.getValor());
+                    PreparedStatement prep = this.conn.prepareStatement(sql);
+                    prep.setString(1, produto.getNome());
+                     prep.setInt(2, produto.getValor());
+                     prep.setString(3, produto.getStatus());
                      
-                       stmt.execute();
+                       prep.execute();
             
                 } catch (Exception e) {
     JOptionPane.showMessageDialog(null, "Não foi possível cadastrar o produto!" , "Erro", JOptionPane.ERROR_MESSAGE);
