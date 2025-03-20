@@ -55,7 +55,7 @@ public class ProdutosDAO {
            ArrayList<ProdutosDTO> listagem = new ArrayList<>();
 
     try {
-        // Exemplo de conexão com o banco de dados
+       
         Connection conn = new conectaDAO().connectDB();
         String sql = "SELECT id, nome, valor, status FROM produtos";
         PreparedStatement pstm = conn.prepareStatement(sql);
@@ -81,6 +81,24 @@ public class ProdutosDAO {
     }
 
     return listagem;
+    }
+     public void venderProduto(int id) {
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+        try {
+            PreparedStatement prep = this.conn.prepareStatement(sql);
+            prep.setString(1, "Vendido");
+            prep.setInt(2, id);
+            int rowsAffected = prep.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            prep.close();
+            conn.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     
