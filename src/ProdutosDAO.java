@@ -100,6 +100,38 @@ public class ProdutosDAO {
             JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
+     
+     public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+    ArrayList<ProdutosDTO> listagemVendidos = new ArrayList<>();
+
+    try {
+        Connection conn = new conectaDAO().connectDB();
+        String sql = "SELECT id, nome, valor, status FROM produtos WHERE status = 'Vendido'";
+        PreparedStatement pstm = conn.prepareStatement(sql);
+        ResultSet rs = pstm.executeQuery();
+
+        while (rs.next()) {
+            ProdutosDTO produto = new ProdutosDTO();
+            produto.setId(rs.getInt("id"));
+            produto.setNome(rs.getString("nome"));
+            produto.setValor(rs.getInt("valor"));
+            produto.setStatus(rs.getString("status"));
+
+            listagemVendidos.add(produto);
+        }
+
+        rs.close();
+        pstm.close();
+        conn.close();
+
+    } catch (Exception e) {
+        System.out.println("Erro ao listar produtos vendidos: " + e.getMessage());
+        return null;
+    }
+
+    return listagemVendidos;
+}
+      
     
     
     
